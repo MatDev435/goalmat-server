@@ -1,0 +1,127 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  username     String
+  avatarUrl    String?
+  email        String   @unique
+  passwordHash String
+  isPlus       Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  ownedGroups          Group[]
+  joinedGroups         Member[]
+  goals                Goal[]
+  completions          GoalCompletion[]
+  weekSummaires        WeekSummary[]
+  groupGoalCompletions GroupGoalCompletion[]
+  subscription         Subscription[]
+
+  @@map("users")
+}
+
+model Group {
+  id          String   @id @default(uuid())
+  name        String
+  photoUrl    String
+  description String
+  inviteCode  String
+  createdAt   DateTime @default(now())
+
+  owner  User   @relation(fields: [userId], references: [id])
+  userId String
+
+  members             Member[]
+  goals               Goal[]
+  GroupGoalCompletion GroupGoalCompletion[]
+
+  @@map("groups")
+}
+
+model Member {
+  id       String   @id @default(uuid())
+  user     User     @relation(fields: [userId], references: [id])
+  userId   String
+  group    Group    @relation(fields: [groupId], references: [id])
+  groupId  String
+  joinedAt DateTime @default(now())
+
+  @@map("members")
+}
+
+model Goal {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime?
+
+  owner   User?   @relation(fields: [ownerId], references: [id])
+  ownerId String?
+  group   Group?  @relation(fields: [groupId], references: [id])
+  groupId String?
+
+  completions         GoalCompletion[]
+  GroupGoalCompletion GroupGoalCompletion[]
+
+  @@map("goals")
+}
+
+model GoalCompletion {
+  id          String   @id @default(uuid())
+  goal        Goal     @relation(fields: [goalId], references: [id])
+  goalId      String
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  completedAt DateTime @default(now())
+
+  @@map("goalCompletions")
+}
+
+model GroupGoalCompletion {
+  id          String   @id @default(uuid())
+  goal        Goal     @relation(fields: [goalId], references: [id])
+  goalId      String
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String
+  group       Group    @relation(fields: [groupId], references: [id])
+  groupId     String
+  completedAt DateTime @default(now())
+
+  @@map("groupGoalCompletions")
+}
+
+model WeekSummary {
+  id             String   @id @default(uuid())
+  weekStart      DateTime
+  completedGoals Int
+  addedGoals     Int
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  @@map("weekSummaries")
+}
+
+model Subscription {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  status    String
+  createdAt DateTime @default(now())
+
+  @@map("subscriptions")
+}
