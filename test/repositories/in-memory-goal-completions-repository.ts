@@ -6,6 +6,16 @@ export class InMemoryGoalCompletionsRepository
 {
   public items: GoalCompletion[] = []
 
+  async findById(goalCompletionId: string): Promise<GoalCompletion | null> {
+    const goalCompletion = this.items.find(item => item.id === goalCompletionId)
+
+    if (!goalCompletion) {
+      return null
+    }
+
+    return goalCompletion
+  }
+
   async create(
     goalCompletion: Prisma.GoalCompletionUncheckedCreateInput
   ): Promise<GoalCompletion> {
@@ -17,5 +27,11 @@ export class InMemoryGoalCompletionsRepository
     this.items.push(newGoalCompletion)
 
     return newGoalCompletion
+  }
+
+  async delete(goalCompletionId: string): Promise<void> {
+    const itemIndex = this.items.findIndex(item => item.id === goalCompletionId)
+
+    this.items.splice(itemIndex, 1)
   }
 }
