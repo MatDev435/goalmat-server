@@ -46,7 +46,7 @@ model Group {
 
   members             Member[]
   goals               Goal[]
-  GroupGoalCompletion GroupGoalCompletion[]
+  groupGoalCompletion GroupGoalCompletion[]
 
   @@map("groups")
 }
@@ -63,11 +63,12 @@ model Member {
 }
 
 model Goal {
-  id          String    @id @default(uuid())
-  name        String
-  description String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime?
+  id                     String    @id @default(uuid())
+  name                   String
+  description            String?
+  desiredWeeklyFrequency Int
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime?
 
   owner   User?   @relation(fields: [ownerId], references: [id])
   ownerId String?
@@ -75,7 +76,7 @@ model Goal {
   groupId String?
 
   completions         GoalCompletion[]
-  GroupGoalCompletion GroupGoalCompletion[]
+  groupGoalCompletion GroupGoalCompletion[]
 
   @@map("goals")
 }
