@@ -8,6 +8,7 @@ export function makeGoal(override: Partial<Goal> = {}) {
     name: faker.lorem.sentence(),
     description: faker.lorem.paragraph(),
     desiredWeeklyFrequency: Math.floor(Math.random() * 7) - 1,
+    createdAt: new Date(),
     ...override,
   } as Goal
 

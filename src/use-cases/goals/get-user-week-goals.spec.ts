@@ -3,17 +3,17 @@ import { InMemoryUsersRepository } from '../../../test/repositories/in-memory-us
 import { InMemoryGoalsRepository } from '../../../test/repositories/in-memory-goals-repository'
 import { ResourceNotFoundError } from '../errors/resource-not-found-error'
 import { makeGoal } from '../../../test/factories/make-goal'
-import { GetUserGoalsUseCase } from './get-user-goals'
+import { GetUserWeekGoalsUseCase } from './get-user-week-goals'
 
 let inMemoryGoalsRepository: InMemoryGoalsRepository
 let inMemoryUsersRepository: InMemoryUsersRepository
-let sut: GetUserGoalsUseCase
+let sut: GetUserWeekGoalsUseCase
 
 describe('Get User Goals Use Case', () => {
   beforeEach(() => {
     inMemoryGoalsRepository = new InMemoryGoalsRepository()
     inMemoryUsersRepository = new InMemoryUsersRepository()
-    sut = new GetUserGoalsUseCase(
+    sut = new GetUserWeekGoalsUseCase(
       inMemoryGoalsRepository,
       inMemoryUsersRepository
     )

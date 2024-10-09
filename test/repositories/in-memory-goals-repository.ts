@@ -1,5 +1,6 @@
 import { Goal, Prisma } from '@prisma/client'
 import { GoalsRepository } from '../../src/repositories/goals-repository'
+import { myDayjs } from '../../src/utils/dayjs'
 
 export class InMemoryGoalsRepository implements GoalsRepository {
   public items: Goal[] = []
@@ -14,8 +15,13 @@ export class InMemoryGoalsRepository implements GoalsRepository {
     return goal
   }
 
-  async fetchByUserId(userId: string): Promise<Goal[]> {
-    const goals = this.items.filter(item => item.ownerId === userId)
+  async fetchUserWeekGoals(userId: string): Promise<Goal[]> {
+    const startOfWeek = myDayjs().startOf('isoWeek').toDate()
+    const endOfWeek = myDayjs().endOf('isoWeek').toDate()
+
+    const goals = this.items.filter(
+      item => item.createdAt >= startOfWeek && item.createdAt <= endOfWeek
+    )
 
     return goals
   }

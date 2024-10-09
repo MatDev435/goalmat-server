@@ -3,15 +3,15 @@ import { UsersRepository } from '../../repositories/users-repository'
 import { GoalsRepository } from '../../repositories/goals-repository'
 import { ResourceNotFoundError } from '../errors/resource-not-found-error'
 
-interface GetUserGoalsUseCaseRequest {
+interface GetUserWeekGoalsUseCaseRequest {
   userId: string
 }
 
-interface GetUserGoalsUseCaseResponse {
+interface GetUserWeekGoalsUseCaseResponse {
   goals: Goal[]
 }
 
-export class GetUserGoalsUseCase {
+export class GetUserWeekGoalsUseCase {
   constructor(
     private goalsRepository: GoalsRepository,
     private usersRepository: UsersRepository
@@ -19,14 +19,14 @@ export class GetUserGoalsUseCase {
 
   async execute({
     userId,
-  }: GetUserGoalsUseCaseRequest): Promise<GetUserGoalsUseCaseResponse> {
+  }: GetUserWeekGoalsUseCaseRequest): Promise<GetUserWeekGoalsUseCaseResponse> {
     const user = await this.usersRepository.findById(userId)
 
     if (!user) {
       throw new ResourceNotFoundError()
     }
 
-    const goals = await this.goalsRepository.fetchByUserId(userId)
+    const goals = await this.goalsRepository.fetchUserWeekGoals(userId)
 
     return { goals }
   }
