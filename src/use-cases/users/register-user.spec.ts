@@ -1,4 +1,4 @@
-import { FakeEncrypter } from '../../../test/cryptography/fake-encrypter'
+import { FakeEncrypter } from '../../../test/repositories/cryptography/fake-encrypter'
 import { makeUser } from '../../../test/factories/make-user'
 import { InMemoryUsersRepository } from '../../../test/repositories/in-memory-users-repository'
 import { EmailAlreadyInUseError } from '../errors/email-already-in-use-error'

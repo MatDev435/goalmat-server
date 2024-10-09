@@ -1,4 +1,4 @@
-import { EncrypterRepository } from '../../src/cryptography/encrypter'
+import { EncrypterRepository } from '../../../src/repositories/cryptography/encrypter'
 
 export class FakeEncrypter implements EncrypterRepository {
   async hash(plain: string): Promise<string> {

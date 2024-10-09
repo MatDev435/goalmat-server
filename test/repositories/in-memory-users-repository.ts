@@ -24,6 +24,14 @@ export class InMemoryUsersRepository implements UsersRepository {
     return user
   }
 
+  async save(user: User): Promise<User> {
+    const itemIndex = this.items.findIndex(item => item.id === user.id)
+
+    this.items[itemIndex] = user
+
+    return user
+  }
+
   async create(user: Prisma.UserUncheckedCreateInput): Promise<User> {
     const newUser = {
       username: user.username,
