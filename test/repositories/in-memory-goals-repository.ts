@@ -4,6 +4,16 @@ import { GoalsRepository } from '../../src/repositories/goals-repository'
 export class InMemoryGoalsRepository implements GoalsRepository {
   public items: Goal[] = []
 
+  async findById(goalId: string): Promise<Goal | null> {
+    const goal = this.items.find(item => item.id === goalId)
+
+    if (!goal) {
+      return null
+    }
+
+    return goal
+  }
+
   async fetchByUserId(userId: string): Promise<Goal[]> {
     const goals = this.items.filter(item => item.ownerId === userId)
 
