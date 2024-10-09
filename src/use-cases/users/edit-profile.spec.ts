@@ -1,7 +1,7 @@
 import { makeUser } from '../../../test/factories/make-user'
 import { InMemoryUsersRepository } from '../../../test/repositories/in-memory-users-repository'
+import { ResourceNotFoundError } from '../errors/resource-not-found-error'
 import { EditProfileUseCase } from './edit-profile'
-import { NotAllowedError } from '../errors/not-allowed-error'
 
 let inMemoryUsersRepository: InMemoryUsersRepository
 let sut: EditProfileUseCase
@@ -38,6 +38,6 @@ describe('Edit Profile Use Case', () => {
         userId: 'inexistent-user',
         newUsername: 'NewUsername',
       })
-    ).rejects.toBeInstanceOf(NotAllowedError)
+    ).rejects.toBeInstanceOf(ResourceNotFoundError)
   })
 })

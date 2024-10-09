@@ -1,6 +1,5 @@
-import { StorageRepository } from '../../repositories/storage/storage-repository'
 import { UsersRepository } from '../../repositories/users-repository'
-import { NotAllowedError } from '../errors/not-allowed-error'
+import { ResourceNotFoundError } from '../errors/resource-not-found-error'
 
 interface EditProfileUseCaseRequest {
   userId: string
@@ -21,7 +20,7 @@ export class EditProfileUseCase {
     const user = await this.usersRepository.findById(userId)
 
     if (!user) {
-      throw new NotAllowedError()
+      throw new ResourceNotFoundError()
     }
 
     user.username = newUsername
