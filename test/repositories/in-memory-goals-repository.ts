@@ -26,6 +26,24 @@ export class InMemoryGoalsRepository implements GoalsRepository {
     return goals
   }
 
+  async fetchUserLastWeekGoals(userId: string): Promise<Goal[]> {
+    const startOfLastWeek = myDayjs()
+      .startOf('isoWeek')
+      .subtract(1, 'week')
+      .toDate()
+    const endOfLastWeek = myDayjs()
+      .endOf('isoWeek')
+      .subtract(1, 'week')
+      .toDate()
+
+    const goals = this.items.filter(
+      item =>
+        item.createdAt >= startOfLastWeek && item.createdAt <= endOfLastWeek
+    )
+
+    return goals
+  }
+
   async save(goal: Goal): Promise<Goal> {
     const itemIndex = this.items.findIndex(item => item.id === goal.id)
 

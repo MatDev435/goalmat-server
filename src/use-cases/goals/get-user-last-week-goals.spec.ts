@@ -3,17 +3,17 @@ import { InMemoryUsersRepository } from '../../../test/repositories/in-memory-us
 import { InMemoryGoalsRepository } from '../../../test/repositories/in-memory-goals-repository'
 import { ResourceNotFoundError } from '../errors/resource-not-found-error'
 import { makeGoal } from '../../../test/factories/make-goal'
-import { GetUserWeekGoalsUseCase } from './get-user-week-goals'
+import { GetUserLastWeekGoalsUseCase } from './get-user-last-week-goals'
 
 let inMemoryGoalsRepository: InMemoryGoalsRepository
 let inMemoryUsersRepository: InMemoryUsersRepository
-let sut: GetUserWeekGoalsUseCase
+let sut: GetUserLastWeekGoalsUseCase
 
-describe('Get User Week Goals Use Case', () => {
+describe('Get User Last Week Goals Use Case', () => {
   beforeEach(() => {
     inMemoryGoalsRepository = new InMemoryGoalsRepository()
     inMemoryUsersRepository = new InMemoryUsersRepository()
-    sut = new GetUserWeekGoalsUseCase(
+    sut = new GetUserLastWeekGoalsUseCase(
       inMemoryGoalsRepository,
       inMemoryUsersRepository
     )
@@ -23,10 +23,18 @@ describe('Get User Week Goals Use Case', () => {
         id: 'user-01',
       })
     )
+
+    vi.useFakeTimers()
   })
 
-  it('should be able to list user goals', async () => {
-    for (let i = 0; i < 10; i++) {
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('should be able to list user last week goals', async () => {
+    vi.setSystemTime(new Date(2024, 8, 30, 0, 0, 0))
+
+    for (let i = 0; i < 2; i++) {
       inMemoryGoalsRepository.items.push(
         makeGoal({
           id: `goal-${i}`,
@@ -35,11 +43,20 @@ describe('Get User Week Goals Use Case', () => {
       )
     }
 
+    vi.setSystemTime(new Date(2024, 9, 7, 0, 0, 0))
+
+    inMemoryGoalsRepository.items.push(
+      makeGoal({
+        id: 'goal-2',
+        ownerId: 'user-01',
+      })
+    )
+
     const { goals } = await sut.execute({
       userId: 'user-01',
     })
 
-    expect(goals).toHaveLength(10)
+    expect(goals).toHaveLength(2)
     expect(goals).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -47,13 +64,13 @@ describe('Get User Week Goals Use Case', () => {
         }),
 
         expect.objectContaining({
-          id: 'goal-2',
+          id: 'goal-1',
         }),
       ])
     )
   })
 
-  it('should not be able to list goals with an inexistent user', async () => {
+  it('should not be able to list last week goals with an inexistent user', async () => {
     await expect(() =>
       sut.execute({
         userId: 'inexistent-user',

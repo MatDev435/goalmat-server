@@ -17,7 +17,7 @@ export class InMemoryGoalCompletionsRepository
     return goalCompletion
   }
 
-  async fetchByUserId(userId: string): Promise<GoalCompletion[]> {
+  async fetchWeekGoalCompletions(userId: string): Promise<GoalCompletion[]> {
     const startOfWeek = myDayjs().startOf('isoWeek').toDate()
     const endOfWeek = myDayjs().endOf('isoWeek').toDate()
 
@@ -25,6 +25,29 @@ export class InMemoryGoalCompletionsRepository
       .filter(item => item.userId === userId)
       .filter(
         item => item.completedAt >= startOfWeek && item.completedAt <= endOfWeek
+      )
+
+    return goalCompletions
+  }
+
+  async fetchLastWeekGoalCompletions(
+    userId: string
+  ): Promise<GoalCompletion[]> {
+    const startOfLastWeek = myDayjs()
+      .startOf('isoWeek')
+      .subtract(1, 'week')
+      .toDate()
+    const endOfLastWeek = myDayjs()
+      .endOf('isoWeek')
+      .subtract(1, 'week')
+      .toDate()
+
+    const goalCompletions = this.items
+      .filter(item => item.userId === userId)
+      .filter(
+        item =>
+          item.completedAt >= startOfLastWeek &&
+          item.completedAt <= endOfLastWeek
       )
 
     return goalCompletions

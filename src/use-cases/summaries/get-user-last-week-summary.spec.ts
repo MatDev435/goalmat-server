@@ -7,14 +7,15 @@ import { GetUserWeekSummaryUseCase } from './get-user-week-summary'
 import { InMemorySummariesRepository } from '../../../test/repositories/in-memory-summaries-repository'
 import { makeGoalCompletion } from '../../../test/factories/make-goal-completion'
 import { ResourceNotFoundError } from '../errors/resource-not-found-error'
+import { GetUserLastWeekSummaryUseCase } from './get-user-last-week-summary'
 
 let inMemoryGoalsRepository: InMemoryGoalsRepository
 let inMemoryGoalCompletionsRepository: InMemoryGoalCompletionsRepository
 let inMemoryUsersRepository: InMemoryUsersRepository
 let inMemorySummariesRepository: InMemorySummariesRepository
-let sut: GetUserWeekSummaryUseCase
+let sut: GetUserLastWeekSummaryUseCase
 
-describe('Get User Week Summary Use Case', () => {
+describe('Get User Last Week Summary Use Case', () => {
   beforeEach(() => {
     inMemoryGoalsRepository = new InMemoryGoalsRepository()
     inMemoryGoalCompletionsRepository = new InMemoryGoalCompletionsRepository()
@@ -23,7 +24,7 @@ describe('Get User Week Summary Use Case', () => {
       inMemoryGoalsRepository,
       inMemoryGoalCompletionsRepository
     )
-    sut = new GetUserWeekSummaryUseCase(
+    sut = new GetUserLastWeekSummaryUseCase(
       inMemorySummariesRepository,
       inMemoryUsersRepository
     )
@@ -35,8 +36,8 @@ describe('Get User Week Summary Use Case', () => {
     vi.useRealTimers()
   })
 
-  it('should be able to get user week summary', async () => {
-    vi.setSystemTime(new Date(2024, 9, 7, 0, 0, 0))
+  it('should be able to get user last week summary', async () => {
+    vi.setSystemTime(new Date(2024, 8, 30, 0, 0, 0))
 
     inMemoryUsersRepository.items.push(
       makeUser({
@@ -85,7 +86,7 @@ describe('Get User Week Summary Use Case', () => {
       })
     )
 
-    vi.setSystemTime(new Date(2024, 9, 9, 0, 0, 0))
+    vi.setSystemTime(new Date(2024, 9, 3, 0, 0, 0))
 
     inMemoryGoalCompletionsRepository.items.push(
       makeGoalCompletion({
@@ -94,6 +95,14 @@ describe('Get User Week Summary Use Case', () => {
       })
     )
 
+    vi.setSystemTime(new Date(2024, 9, 8, 0, 0, 0))
+
+    inMemoryGoalCompletionsRepository.items.push(
+      makeGoalCompletion({
+        userId: 'user-01',
+        goalId: 'goal-01',
+      })
+    )
     const { summary } = await sut.execute({
       userId: 'user-01',
     })
@@ -102,7 +111,7 @@ describe('Get User Week Summary Use Case', () => {
       total: 7,
       completed: 3,
       goalsPerDay: {
-        '2024-10-07': expect.arrayContaining([
+        '2024-09-30': expect.arrayContaining([
           expect.objectContaining({
             goalName: 'Goal 01',
           }),
@@ -112,7 +121,7 @@ describe('Get User Week Summary Use Case', () => {
           }),
         ]),
 
-        '2024-10-09': expect.arrayContaining([
+        '2024-10-03': expect.arrayContaining([
           expect.objectContaining({
             goalName: 'Goal 02',
           }),
@@ -121,7 +130,7 @@ describe('Get User Week Summary Use Case', () => {
     })
   })
 
-  it('should not be able to get user week summary with an inexistent user', async () => {
+  it('should not be able to get user last week summary with an inexistent user', async () => {
     await expect(() =>
       sut.execute({
         userId: 'user-01',
