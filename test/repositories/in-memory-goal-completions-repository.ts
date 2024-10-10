@@ -1,5 +1,6 @@
 import { Prisma, GoalCompletion } from '@prisma/client'
 import { GoalCompletionsRepository } from '../../src/repositories/goal-completions-repository'
+import { myDayjs } from '../../src/utils/dayjs'
 
 export class InMemoryGoalCompletionsRepository
   implements GoalCompletionsRepository
@@ -14,6 +15,19 @@ export class InMemoryGoalCompletionsRepository
     }
 
     return goalCompletion
+  }
+
+  async fetchByUserId(userId: string): Promise<GoalCompletion[]> {
+    const startOfWeek = myDayjs().startOf('isoWeek').toDate()
+    const endOfWeek = myDayjs().endOf('isoWeek').toDate()
+
+    const goalCompletions = this.items
+      .filter(item => item.userId === userId)
+      .filter(
+        item => item.completedAt >= startOfWeek && item.completedAt <= endOfWeek
+      )
+
+    return goalCompletions
   }
 
   async create(

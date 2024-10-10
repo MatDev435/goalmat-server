@@ -6,6 +6,7 @@ export function makeGoalCompletion(override: Partial<GoalCompletion> = {}) {
     id: randomUUID(),
     goalId: randomUUID(),
     userId: randomUUID(),
+    completedAt: new Date(),
     ...override,
   } as GoalCompletion
 
