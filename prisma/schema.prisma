@@ -107,10 +107,11 @@ model GroupGoalCompletion {
 }
 
 model WeekSummary {
-  id             String   @id @default(uuid())
-  weekStart      DateTime
-  completedGoals Int
-  addedGoals     Int
+  id               String   @id @default(uuid())
+  weekStart        DateTime
+  weekEnd          DateTime
+  completionsCount Int
+  addedGoals       Int
 
   user   User   @relation(fields: [userId], references: [id])
   userId String

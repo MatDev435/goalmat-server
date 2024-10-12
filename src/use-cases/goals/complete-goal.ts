@@ -4,6 +4,7 @@ import { ResourceNotFoundError } from '../errors/resource-not-found-error'
 import { NotAllowedError } from '../errors/not-allowed-error'
 import { GoalCompletion } from '@prisma/client'
 import { GoalCompletionsRepository } from '../../repositories/goal-completions-repository'
+import { GoalAlreadyCompletedError } from '../errors/goal-already-completed-error'
 
 interface CompleteGoalUseCaseRequest {
   userId: string
@@ -39,6 +40,14 @@ export class CompleteGoalUseCase {
 
     if (userId !== goal.ownerId) {
       throw new NotAllowedError()
+    }
+
+    const goalCompletions = await this.goalCompletionsRepository.fetchByGoalId(
+      goal.id
+    )
+
+    if (goalCompletions.length >= goal.desiredWeeklyFrequency) {
+      throw new GoalAlreadyCompletedError()
     }
 
     const goalCompletion = await this.goalCompletionsRepository.create({

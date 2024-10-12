@@ -6,6 +6,8 @@ import { ResourceNotFoundError } from '../errors/resource-not-found-error'
 import { makeGoal } from '../../../test/factories/make-goal'
 import { NotAllowedError } from '../errors/not-allowed-error'
 import { InMemoryGoalCompletionsRepository } from '../../../test/repositories/in-memory-goal-completions-repository'
+import { makeGoalCompletion } from '../../../test/factories/make-goal-completion'
+import { GoalAlreadyCompletedError } from '../errors/goal-already-completed-error'
 
 let inMemoryGoalsRepository: InMemoryGoalsRepository
 let inMemoryGoalCompletionsRepository: InMemoryGoalCompletionsRepository
@@ -33,6 +35,7 @@ describe('Complete Goal Use Case', () => {
       makeGoal({
         id: 'goal-01',
         ownerId: 'user-01',
+        desiredWeeklyFrequency: 5,
       })
     )
   })
@@ -44,6 +47,30 @@ describe('Complete Goal Use Case', () => {
     })
 
     expect(inMemoryGoalCompletionsRepository.items[0]).toEqual(goalCompletion)
+  })
+
+  it('should not be able to complete a goal twice in same week', async () => {
+    inMemoryGoalsRepository.items.push(
+      makeGoal({
+        id: 'goal-02',
+        ownerId: 'user-01',
+        desiredWeeklyFrequency: 1,
+      })
+    )
+
+    inMemoryGoalCompletionsRepository.items.push(
+      makeGoalCompletion({
+        userId: 'user-01',
+        goalId: 'goal-02',
+      })
+    )
+
+    await expect(() =>
+      sut.execute({
+        userId: 'user-01',
+        goalId: 'goal-02',
+      })
+    ).rejects.toBeInstanceOf(GoalAlreadyCompletedError)
   })
 
   it('should not be able to complete a goal with an inexistent user', async () => {
