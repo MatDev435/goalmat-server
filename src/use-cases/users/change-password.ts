@@ -1,7 +1,7 @@
 import { EncrypterRepository } from '../../repositories/cryptography/encrypter'
 import { UsersRepository } from '../../repositories/users-repository'
-import { InvalidCredentialsError } from '../errors/invalid-credentials-error'
-import { ResourceNotFoundError } from '../errors/resource-not-found-error'
+import { InvalidCredentialsError } from '../_errors/invalid-credentials-error'
+import { ResourceNotFoundError } from '../_errors/resource-not-found-error'
 
 interface ChangePasswordUseCaseRequest {
   userId: string

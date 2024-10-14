@@ -1,6 +1,6 @@
 import { UsersRepository } from '../../repositories/users-repository'
-import { ResourceNotFoundError } from '../errors/resource-not-found-error'
-import { NotAllowedError } from '../errors/not-allowed-error'
+import { ResourceNotFoundError } from '../_errors/resource-not-found-error'
+import { NotAllowedError } from '../_errors/not-allowed-error'
 import { GoalCompletionsRepository } from '../../repositories/goal-completions-repository'
 
 interface UndoGoalCompletionUseCaseRequest {

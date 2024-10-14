@@ -1,8 +1,8 @@
 import { FakeEncrypter } from '../../../test/repositories/cryptography/fake-encrypter'
 import { makeUser } from '../../../test/factories/make-user'
 import { InMemoryUsersRepository } from '../../../test/repositories/in-memory-users-repository'
-import { EmailAlreadyInUseError } from '../errors/email-already-in-use-error'
-import { InvalidCredentialsError } from '../errors/invalid-credentials-error'
+import { EmailAlreadyInUseError } from '../_errors/email-already-in-use-error'
+import { InvalidCredentialsError } from '../_errors/invalid-credentials-error'
 import { AuthenticateUseCase } from './authenticate'
 import { RegisterUserUseCase } from './register-user'
 

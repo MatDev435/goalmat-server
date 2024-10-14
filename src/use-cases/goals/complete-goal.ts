@@ -1,10 +1,10 @@
 import { UsersRepository } from '../../repositories/users-repository'
 import { GoalsRepository } from '../../repositories/goals-repository'
-import { ResourceNotFoundError } from '../errors/resource-not-found-error'
-import { NotAllowedError } from '../errors/not-allowed-error'
+import { ResourceNotFoundError } from '../_errors/resource-not-found-error'
+import { NotAllowedError } from '../_errors/not-allowed-error'
 import { GoalCompletion } from '@prisma/client'
 import { GoalCompletionsRepository } from '../../repositories/goal-completions-repository'
-import { GoalAlreadyCompletedError } from '../errors/goal-already-completed-error'
+import { GoalAlreadyCompletedError } from '../_errors/goal-already-completed-error'
 
 interface CompleteGoalUseCaseRequest {
   userId: string

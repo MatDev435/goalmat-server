@@ -1,7 +1,7 @@
 import { makeUser } from '../../../test/factories/make-user'
 import { InMemoryUsersRepository } from '../../../test/repositories/in-memory-users-repository'
 import { InMemoryGoalsRepository } from '../../../test/repositories/in-memory-goals-repository'
-import { ResourceNotFoundError } from '../errors/resource-not-found-error'
+import { ResourceNotFoundError } from '../_errors/resource-not-found-error'
 import { makeGoal } from '../../../test/factories/make-goal'
 import { GetUserWeekGoalsUseCase } from './get-user-week-goals'
 

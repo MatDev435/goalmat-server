@@ -2,12 +2,12 @@ import { makeUser } from '../../../test/factories/make-user'
 import { InMemoryUsersRepository } from '../../../test/repositories/in-memory-users-repository'
 import { InMemoryGoalsRepository } from '../../../test/repositories/in-memory-goals-repository'
 import { CompleteGoalUseCase } from './complete-goal'
-import { ResourceNotFoundError } from '../errors/resource-not-found-error'
+import { ResourceNotFoundError } from '../_errors/resource-not-found-error'
 import { makeGoal } from '../../../test/factories/make-goal'
-import { NotAllowedError } from '../errors/not-allowed-error'
+import { NotAllowedError } from '../_errors/not-allowed-error'
 import { InMemoryGoalCompletionsRepository } from '../../../test/repositories/in-memory-goal-completions-repository'
 import { makeGoalCompletion } from '../../../test/factories/make-goal-completion'
-import { GoalAlreadyCompletedError } from '../errors/goal-already-completed-error'
+import { GoalAlreadyCompletedError } from '../_errors/goal-already-completed-error'
 
 let inMemoryGoalsRepository: InMemoryGoalsRepository
 let inMemoryGoalCompletionsRepository: InMemoryGoalCompletionsRepository

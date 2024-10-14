@@ -1,7 +1,7 @@
 import { Goal } from '@prisma/client'
 import { UsersRepository } from '../../repositories/users-repository'
 import { GoalsRepository } from '../../repositories/goals-repository'
-import { ResourceNotFoundError } from '../errors/resource-not-found-error'
+import { ResourceNotFoundError } from '../_errors/resource-not-found-error'
 
 interface GetUserWeekGoalsUseCaseRequest {
   userId: string

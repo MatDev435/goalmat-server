@@ -13,14 +13,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum CodeType {
+  EMAIL_VERIFICATION
+  PASSWORD_RESET
+}
+
 model User {
-  id           String   @id @default(uuid())
-  username     String
-  avatarUrl    String?
-  email        String   @unique
-  passwordHash String
-  isPlus       Boolean  @default(false)
-  createdAt    DateTime @default(now())
+  id              String   @id @default(uuid())
+  username        String
+  avatarUrl       String?
+  email           String   @unique
+  passwordHash    String
+  isPlus          Boolean  @default(false)
+  isEmailVerified Boolean  @default(false)
+  createdAt       DateTime @default(now())
 
   ownedGroups          Group[]
   joinedGroups         Member[]
@@ -29,6 +35,7 @@ model User {
   weekSummaires        WeekSummary[]
   groupGoalCompletions GroupGoalCompletion[]
   subscription         Subscription[]
+  codes                UserCode[]
 
   @@map("users")
 }
@@ -127,4 +134,17 @@ model Subscription {
   createdAt DateTime @default(now())
 
   @@map("subscriptions")
+}
+
+model UserCode {
+  id        String   @id @default(uuid())
+  code      String   @unique
+  codeType  CodeType
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  @@map("userCodes")
 }

@@ -6,7 +6,7 @@ import { InMemoryGoalCompletionsRepository } from '../../../test/repositories/in
 import { GetUserWeekSummaryUseCase } from './get-user-week-summary'
 import { InMemorySummariesRepository } from '../../../test/repositories/in-memory-summaries-repository'
 import { makeGoalCompletion } from '../../../test/factories/make-goal-completion'
-import { ResourceNotFoundError } from '../errors/resource-not-found-error'
+import { ResourceNotFoundError } from '../_errors/resource-not-found-error'
 
 let inMemoryGoalsRepository: InMemoryGoalsRepository
 let inMemoryGoalCompletionsRepository: InMemoryGoalCompletionsRepository

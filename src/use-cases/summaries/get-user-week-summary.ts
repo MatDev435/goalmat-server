@@ -1,5 +1,5 @@
 import { UsersRepository } from '../../repositories/users-repository'
-import { ResourceNotFoundError } from '../errors/resource-not-found-error'
+import { ResourceNotFoundError } from '../_errors/resource-not-found-error'
 import { WeekSummary } from '../../types/week-summary'
 import { SummariesRepository } from '../../repositories/summaries-repository'
 

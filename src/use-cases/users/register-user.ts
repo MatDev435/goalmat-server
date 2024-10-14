@@ -1,7 +1,10 @@
 import { User } from '@prisma/client'
 import { UsersRepository } from '../../repositories/users-repository'
-import { EmailAlreadyInUseError } from '../errors/email-already-in-use-error'
+import { EmailAlreadyInUseError } from '../_errors/email-already-in-use-error'
 import { EncrypterRepository } from '../../repositories/cryptography/encrypter'
+import { EmailServiceRepository } from '../../repositories/email/email-service-repository'
+import { UserCodesRepository } from '../../repositories/user-codes-repository'
+import { myDayjs } from '../../utils/dayjs'
 
 interface RegisterUserUseCaseRequest {
   username: string
@@ -16,7 +19,9 @@ interface RegisterUserUseCaseResponse {
 export class RegisterUserUseCase {
   constructor(
     private usersRepository: UsersRepository,
-    private encrypter: EncrypterRepository
+    private encrypter: EncrypterRepository,
+    private emailService: EmailServiceRepository,
+    private userCodesRepository: UserCodesRepository
   ) {}
 
   async execute({
@@ -36,6 +41,15 @@ export class RegisterUserUseCase {
       username,
       email,
       passwordHash,
+    })
+
+    const code = await this.emailService.sendEmailVerification(user.email)
+
+    await this.userCodesRepository.create({
+      userId: user.id,
+      code,
+      codeType: 'EMAIL_VERIFICATION',
+      expiresAt: myDayjs().add(15, 'minute').toDate(),
     })
 
     return { user }

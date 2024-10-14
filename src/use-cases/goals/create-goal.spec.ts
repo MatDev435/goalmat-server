@@ -2,7 +2,7 @@ import { makeUser } from '../../../test/factories/make-user'
 import { InMemoryUsersRepository } from '../../../test/repositories/in-memory-users-repository'
 import { InMemoryGoalsRepository } from '../../../test/repositories/in-memory-goals-repository'
 import { CreateGoalUseCase } from './create-goal'
-import { ResourceNotFoundError } from '../errors/resource-not-found-error'
+import { ResourceNotFoundError } from '../_errors/resource-not-found-error'
 
 let inMemoryGoalsRepository: InMemoryGoalsRepository
 let inMemoryUsersRepository: InMemoryUsersRepository

@@ -1,8 +1,8 @@
 import { makeUser } from '../../../test/factories/make-user'
 import { FakeEncrypter } from '../../../test/repositories/cryptography/fake-encrypter'
 import { InMemoryUsersRepository } from '../../../test/repositories/in-memory-users-repository'
-import { InvalidCredentialsError } from '../errors/invalid-credentials-error'
-import { ResourceNotFoundError } from '../errors/resource-not-found-error'
+import { InvalidCredentialsError } from '../_errors/invalid-credentials-error'
+import { ResourceNotFoundError } from '../_errors/resource-not-found-error'
 import { ChangePasswordUseCase } from './change-password'
 import { EditProfileUseCase } from './edit-profile'
 

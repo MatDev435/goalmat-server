@@ -1,6 +1,6 @@
 import { makeUser } from '../../../test/factories/make-user'
 import { InMemoryUsersRepository } from '../../../test/repositories/in-memory-users-repository'
-import { ResourceNotFoundError } from '../errors/resource-not-found-error'
+import { ResourceNotFoundError } from '../_errors/resource-not-found-error'
 import { EditProfileUseCase } from './edit-profile'
 
 let inMemoryUsersRepository: InMemoryUsersRepository
