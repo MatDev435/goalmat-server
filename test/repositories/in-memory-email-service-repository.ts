@@ -1,5 +1,6 @@
 import { EmailServiceRepository } from '../../src/repositories/email/email-service-repository'
 import shortid from 'shortid'
+import { env } from '../../src/env'
 
 interface Email {
   to: string
@@ -20,5 +21,15 @@ export class InMemoryEmailServiceRepository implements EmailServiceRepository {
     })
 
     return code
+  }
+
+  async sendPasswordReset(to: string, resetToken: string): Promise<void> {
+    const resetLink = `${env.APP_URL}/reset-password?token=${resetToken}`
+
+    this.items.push({
+      to,
+      subject: 'Reset password',
+      body: `Reset link: ${resetLink}`,
+    })
   }
 }
