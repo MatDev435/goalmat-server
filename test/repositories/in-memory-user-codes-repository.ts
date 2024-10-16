@@ -1,4 +1,4 @@
-import { Prisma, UserCode } from '@prisma/client'
+import { CodeType, Prisma, UserCode } from '@prisma/client'
 import { UserCodesRepository } from '../../src/repositories/user-codes-repository'
 
 export class InMemoryUserCodesRepository implements UserCodesRepository {
@@ -12,6 +12,21 @@ export class InMemoryUserCodesRepository implements UserCodesRepository {
     }
 
     return existentCode
+  }
+
+  async findByUserId(
+    userId: string,
+    codeType: CodeType
+  ): Promise<UserCode | null> {
+    const code = this.items.find(
+      item => item.userId === userId && item.codeType === codeType
+    )
+
+    if (!code) {
+      return null
+    }
+
+    return code
   }
 
   async create(code: Prisma.UserCodeUncheckedCreateInput): Promise<void> {

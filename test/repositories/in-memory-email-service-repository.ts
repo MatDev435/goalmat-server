@@ -11,16 +11,12 @@ interface Email {
 export class InMemoryEmailServiceRepository implements EmailServiceRepository {
   public items: Email[] = []
 
-  async sendEmailVerification(to: string): Promise<string> {
-    const code = shortid.generate()
-
+  async sendEmailVerification(to: string, code: string): Promise<void> {
     this.items.push({
       to,
       subject: 'E-mail verification',
       body: `Code: ${code}`,
     })
-
-    return code
   }
 
   async sendPasswordReset(to: string, resetToken: string): Promise<void> {

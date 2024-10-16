@@ -5,6 +5,7 @@ import { EncrypterRepository } from '../../repositories/cryptography/encrypter'
 import { EmailServiceRepository } from '../../repositories/email/email-service-repository'
 import { UserCodesRepository } from '../../repositories/user-codes-repository'
 import { myDayjs } from '../../utils/dayjs'
+import shortid from 'shortid'
 
 interface RegisterUserUseCaseRequest {
   username: string
@@ -43,7 +44,7 @@ export class RegisterUserUseCase {
       passwordHash,
     })
 
-    const code = await this.emailService.sendEmailVerification(user.email)
+    const code = shortid.generate()
 
     await this.userCodesRepository.create({
       userId: user.id,
@@ -51,6 +52,8 @@ export class RegisterUserUseCase {
       codeType: 'EMAIL_VERIFICATION',
       expiresAt: myDayjs().add(15, 'minute').toDate(),
     })
+
+    await this.emailService.sendEmailVerification(email, code)
 
     return { user }
   }

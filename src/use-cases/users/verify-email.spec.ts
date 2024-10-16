@@ -23,7 +23,7 @@ describe('Verify Email Use Case', () => {
     inMemoryUsersRepository.items.push(
       makeUser({
         id: 'user-01',
-        email: 'johndoe@example.com',
+        isEmailVerified: false,
       })
     )
 
@@ -39,11 +39,11 @@ describe('Verify Email Use Case', () => {
       makeUserCode({
         userId: 'user-01',
         code: '1234',
+        codeType: 'EMAIL_VERIFICATION',
       })
     )
 
     const { success } = await sut.execute({
-      email: 'johndoe@example.com',
       code: '1234',
     })
 
@@ -51,47 +51,70 @@ describe('Verify Email Use Case', () => {
     expect(inMemoryUsersRepository.items[0].isEmailVerified).toEqual(true)
   })
 
-  it('should not be able to verify an email of an inexistent user', async () => {
+  it('should not be able to verify user email with an inexistent code', async () => {
     await expect(() =>
       sut.execute({
-        email: 'wrong@example.com',
-        code: '1234',
-      })
-    ).rejects.toBeInstanceOf(ResourceNotFoundError)
-  })
-
-  it('should not be able to verify an email with inexistent code', async () => {
-    await expect(() =>
-      sut.execute({
-        email: 'johndoe@example.com',
         code: 'inexistent-code',
       })
     ).rejects.toBeInstanceOf(InvalidCodeError)
   })
 
-  it('should not be able to verify user email twice', async () => {
-    inMemoryUsersRepository.items[0].isEmailVerified = true
+  it('should not be able to verify user email with an expired code', async () => {
+    vi.setSystemTime(new Date(2024, 9, 16, 0, 0, 0))
+
+    inMemoryUserCodesRepository.items.push(
+      makeUserCode({
+        userId: 'user-01',
+        code: '1234',
+        codeType: 'EMAIL_VERIFICATION',
+      })
+    )
+
+    vi.setSystemTime(new Date(2024, 9, 16, 0, 16, 0))
 
     await expect(() =>
       sut.execute({
-        email: 'johndoe@example.com',
         code: '1234',
       })
-    ).rejects.toBeInstanceOf(EmailAlreadyVerifiedError)
+    ).rejects.toBeInstanceOf(InvalidCodeError)
   })
 
-  it('should not be able to verify an email with invalid code', async () => {
+  it('should not be able to verify inexistent user email', async () => {
     inMemoryUserCodesRepository.items.push(
       makeUserCode({
+        userId: 'inexistent-user-id',
         code: '1234',
+        codeType: 'EMAIL_VERIFICATION',
       })
     )
 
     await expect(() =>
       sut.execute({
-        email: 'johndoe@example.com',
-        code: 'wrong-code',
+        code: '1234',
       })
-    ).rejects.toBeInstanceOf(InvalidCodeError)
+    ).rejects.toBeInstanceOf(ResourceNotFoundError)
+  })
+
+  it('should not be able to verify user email twice', async () => {
+    inMemoryUsersRepository.items.push(
+      makeUser({
+        id: 'user-02',
+        isEmailVerified: true,
+      })
+    )
+
+    inMemoryUserCodesRepository.items.push(
+      makeUserCode({
+        userId: 'user-02',
+        code: '1234',
+        codeType: 'EMAIL_VERIFICATION',
+      })
+    )
+
+    await expect(() =>
+      sut.execute({
+        code: '1234',
+      })
+    ).rejects.toBeInstanceOf(EmailAlreadyVerifiedError)
   })
 })

@@ -5,7 +5,6 @@ import { InvalidCodeError } from '../_errors/invalid-code-error'
 import { ResourceNotFoundError } from '../_errors/resource-not-found-error'
 
 interface VerifyEmailUseCaseRequest {
-  email: string
   code: string
 }
 
@@ -20,26 +19,11 @@ export class VerifyEmailUseCase {
   ) {}
 
   async execute({
-    email,
     code,
   }: VerifyEmailUseCaseRequest): Promise<VerifyEmailUseCaseResponse> {
-    const user = await this.usersRepository.findByEmail(email)
-
-    if (!user) {
-      throw new ResourceNotFoundError()
-    }
-
-    if (user.isEmailVerified) {
-      throw new EmailAlreadyVerifiedError()
-    }
-
     const existentCode = await this.userCodesRepository.findByCode(code)
 
     if (!existentCode) {
-      throw new InvalidCodeError()
-    }
-
-    if (existentCode.code !== code) {
       throw new InvalidCodeError()
     }
 
@@ -47,6 +31,18 @@ export class VerifyEmailUseCase {
 
     if (now > existentCode.expiresAt) {
       throw new InvalidCodeError()
+    }
+
+    const user = await this.usersRepository.findById(existentCode.userId)
+
+    if (!user) {
+      throw new ResourceNotFoundError()
+    }
+
+    if (user.isEmailVerified === true) {
+      await this.userCodesRepository.delete(existentCode.id)
+
+      throw new EmailAlreadyVerifiedError()
     }
 
     user.isEmailVerified = true
