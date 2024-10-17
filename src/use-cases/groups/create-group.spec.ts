@@ -4,17 +4,21 @@ import { InMemoryGroupsRepository } from '../../../test/repositories/in-memory-g
 import { CreateGroupUseCase } from './create-group'
 import { ResourceNotFoundError } from '../_errors/resource-not-found-error'
 import { NotAllowedError } from '../_errors/not-allowed-error'
+import { InMemoryMembersRepository } from '../../../test/repositories/in-memory-members-repository'
 
 let inMemoryGroupsRepository: InMemoryGroupsRepository
+let inMemoryMembersRepository: InMemoryMembersRepository
 let inMemoryUsersRepository: InMemoryUsersRepository
 let sut: CreateGroupUseCase
 
 describe('Create Group Use Case', () => {
   beforeEach(() => {
     inMemoryGroupsRepository = new InMemoryGroupsRepository()
+    inMemoryMembersRepository = new InMemoryMembersRepository()
     inMemoryUsersRepository = new InMemoryUsersRepository()
     sut = new CreateGroupUseCase(
       inMemoryGroupsRepository,
+      inMemoryMembersRepository,
       inMemoryUsersRepository
     )
   })
@@ -34,6 +38,7 @@ describe('Create Group Use Case', () => {
     })
 
     expect(inMemoryGroupsRepository.items[0]).toEqual(group)
+    expect(inMemoryMembersRepository.items).toHaveLength(1)
   })
 
   it('should not be able to create a group with an inexistent user', async () => {

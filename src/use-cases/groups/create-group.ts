@@ -5,6 +5,7 @@ import { ResourceNotFoundError } from '../_errors/resource-not-found-error'
 import { NotAllowedError } from '../_errors/not-allowed-error'
 import { customAlphabet } from 'nanoid'
 import { generateId } from '../../utils/generate-id'
+import { MembersRepository } from '../../repositories/members-repository'
 
 interface CreateGroupUseCaseRequest {
   userId: string
@@ -19,6 +20,7 @@ interface CreateGroupUseCaseResponse {
 export class CreateGroupUseCase {
   constructor(
     private groupsRepository: GroupsRepository,
+    private membersRepository: MembersRepository,
     private usersRepository: UsersRepository
   ) {}
 
@@ -45,6 +47,8 @@ export class CreateGroupUseCase {
       description,
       inviteCode,
     })
+
+    await this.membersRepository.joinGroup(user.id, group.id)
 
     return { group }
   }
