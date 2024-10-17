@@ -43,13 +43,12 @@ model User {
 model Group {
   id          String   @id @default(uuid())
   name        String
-  photoUrl    String
-  description String
-  inviteCode  String
+  description String?
+  inviteCode  String   @unique
   createdAt   DateTime @default(now())
 
-  owner  User   @relation(fields: [userId], references: [id])
-  userId String
+  owner   User   @relation(fields: [ownerId], references: [id])
+  ownerId String
 
   members             Member[]
   goals               Goal[]
