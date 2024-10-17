@@ -1,4 +1,4 @@
-import shortid from 'shortid'
+import { randomUUID } from 'node:crypto'
 import { EmailServiceRepository } from '../../repositories/email/email-service-repository'
 import { UsersRepository } from '../../repositories/users-repository'
 import { ResourceNotFoundError } from '../_errors/resource-not-found-error'
@@ -29,7 +29,7 @@ export class GenerateResetTokenUseCase {
       throw new ResourceNotFoundError()
     }
 
-    const resetToken = shortid.generate()
+    const resetToken = randomUUID()
     const expiresAt = myDayjs().add(20, 'minute').toDate()
 
     await this.userCodesRepository.create({

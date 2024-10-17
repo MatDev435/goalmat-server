@@ -2,8 +2,8 @@ import { UsersRepository } from '../../repositories/users-repository'
 import { EmailServiceRepository } from '../../repositories/email/email-service-repository'
 import { UserCodesRepository } from '../../repositories/user-codes-repository'
 import { myDayjs } from '../../utils/dayjs'
-import shortid from 'shortid'
 import { ResourceNotFoundError } from '../_errors/resource-not-found-error'
+import { generateId } from '../../utils/generate-id'
 
 interface ResendEmailVerificationUseCaseRequest {
   email: string
@@ -38,7 +38,7 @@ export class ResendEmailVerificationUseCase {
       await this.userCodesRepository.delete(existentCode.id)
     }
 
-    const code = shortid.generate()
+    const code = generateId()
     const expiresAt = myDayjs().add(15, 'minute').toDate()
 
     await this.userCodesRepository.create({

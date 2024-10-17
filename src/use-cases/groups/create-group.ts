@@ -3,7 +3,8 @@ import { UsersRepository } from '../../repositories/users-repository'
 import { GroupsRepository } from '../../repositories/groups-repository'
 import { ResourceNotFoundError } from '../_errors/resource-not-found-error'
 import { NotAllowedError } from '../_errors/not-allowed-error'
-import shortid from 'shortid'
+import { customAlphabet } from 'nanoid'
+import { generateId } from '../../utils/generate-id'
 
 interface CreateGroupUseCaseRequest {
   userId: string
@@ -36,7 +37,7 @@ export class CreateGroupUseCase {
       throw new NotAllowedError()
     }
 
-    const inviteCode = shortid.generate()
+    const inviteCode = generateId()
 
     const group = await this.groupsRepository.create({
       ownerId: user.id,
