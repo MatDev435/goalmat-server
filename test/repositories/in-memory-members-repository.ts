@@ -4,6 +4,18 @@ import { MembersRepository } from '../../src/repositories/members-repository'
 export class InMemoryMembersRepository implements MembersRepository {
   public items: Member[] = []
 
+  async findByGroupId(userId: string, groupId: string): Promise<Member | null> {
+    const member = this.items.find(
+      item => item.userId === userId && item.groupId === groupId
+    )
+
+    if (!member) {
+      return null
+    }
+
+    return member
+  }
+
   async isUserInAnyGroup(userId: string): Promise<boolean> {
     const memberIn = this.items.some(item => item.userId === userId)
 
@@ -27,10 +39,8 @@ export class InMemoryMembersRepository implements MembersRepository {
     return member
   }
 
-  async leaveGroup(userId: string, groupId: string): Promise<void> {
-    const itemIndex = this.items.findIndex(
-      item => item.userId === userId && item.groupId === groupId
-    )
+  async leaveGroup(memberId: string): Promise<void> {
+    const itemIndex = this.items.findIndex(item => item.id === memberId)
 
     this.items.splice(itemIndex, 1)
   }
