@@ -52,6 +52,7 @@ export class CreateGroupGoalUseCase {
     }
 
     const groupGoal = await this.goalsRepository.create({
+      ownerId: user.id,
       groupId: group.id,
       name,
       description,
