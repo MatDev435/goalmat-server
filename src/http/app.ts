@@ -3,5 +3,5 @@ import fastify from 'fastify'
 export const app = fastify()
 
 app.get('/', () => {
-    return 'Hello World!'
+  return 'Hello World!'
 })

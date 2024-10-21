@@ -4,6 +4,16 @@ import { MembersRepository } from '../../src/repositories/members-repository'
 export class InMemoryMembersRepository implements MembersRepository {
   public items: Member[] = []
 
+  async findById(memberId: string): Promise<Member | null> {
+    const member = this.items.find(item => item.id === memberId)
+
+    if (!member) {
+      return null
+    }
+
+    return member
+  }
+
   async findByGroupId(userId: string, groupId: string): Promise<Member | null> {
     const member = this.items.find(
       item => item.userId === userId && item.groupId === groupId
