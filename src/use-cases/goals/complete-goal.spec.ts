@@ -35,40 +35,49 @@ describe('Complete Goal Use Case', () => {
       makeGoal({
         id: 'goal-01',
         ownerId: 'user-01',
-        desiredWeeklyFrequency: 5,
-      })
-    )
-  })
-
-  it('should be able to complete a goal', async () => {
-    const { goalCompletion } = await sut.execute({
-      userId: 'user-01',
-      goalId: 'goal-01',
-    })
-
-    expect(inMemoryGoalCompletionsRepository.items[0]).toEqual(goalCompletion)
-  })
-
-  it('should not be able to complete a goal twice in same week', async () => {
-    inMemoryGoalsRepository.items.push(
-      makeGoal({
-        id: 'goal-02',
-        ownerId: 'user-01',
         desiredWeeklyFrequency: 1,
       })
     )
 
+    vi.useFakeTimers()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  it('should be able to complete a goal', async () => {
+    vi.setSystemTime(new Date(2024, 9, 14, 0, 0, 0))
+
+    inMemoryGoalCompletionsRepository.items.push(
+      makeGoalCompletion({
+        goalId: 'goal-01',
+        userId: 'user-01',
+      })
+    )
+
+    vi.setSystemTime(new Date(2024, 9, 21, 0, 0, 0))
+
+    await sut.execute({
+      userId: 'user-01',
+      goalId: 'goal-01',
+    })
+
+    expect(inMemoryGoalCompletionsRepository.items).toHaveLength(2)
+  })
+
+  it('should not be able to complete a goal twice in week', async () => {
     inMemoryGoalCompletionsRepository.items.push(
       makeGoalCompletion({
         userId: 'user-01',
-        goalId: 'goal-02',
+        goalId: 'goal-01',
       })
     )
 
     await expect(() =>
       sut.execute({
         userId: 'user-01',
-        goalId: 'goal-02',
+        goalId: 'goal-01',
       })
     ).rejects.toBeInstanceOf(GoalAlreadyCompletedError)
   })

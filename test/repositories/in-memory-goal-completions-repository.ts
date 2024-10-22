@@ -18,10 +18,14 @@ export class InMemoryGoalCompletionsRepository
   }
 
   async fetchByGoalId(goalId: string): Promise<GoalCompletion[]> {
+    const startOfWeek = myDayjs().startOf('isoWeek').toDate()
     const endOfWeek = myDayjs().endOf('isoWeek').toDate()
 
     const completionsUpToWeek = this.items.filter(
-      item => item.goalId === goalId && item.completedAt <= endOfWeek
+      item =>
+        item.goalId === goalId &&
+        item.completedAt >= startOfWeek &&
+        item.completedAt <= endOfWeek
     )
 
     return completionsUpToWeek

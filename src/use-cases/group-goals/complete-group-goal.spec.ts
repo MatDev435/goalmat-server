@@ -73,7 +73,7 @@ describe('Complete Group Goal Use Case', () => {
 
     vi.setSystemTime(new Date(2024, 9, 21, 0, 0, 0))
 
-    const { groupGoalCompletion } = await sut.execute({
+    await sut.execute({
       userId: 'user-01',
       groupId: 'group-01',
       goalId: 'goal-01',
