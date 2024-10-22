@@ -36,6 +36,14 @@ export class InMemoryMembersRepository implements MembersRepository {
     return false
   }
 
+  async save(member: Member): Promise<Member> {
+    const itemIndex = this.items.findIndex(item => item.id === member.id)
+
+    this.items[itemIndex] = member
+
+    return member
+  }
+
   async joinGroup(userId: string, groupId: string): Promise<Member> {
     const member = {
       userId,
