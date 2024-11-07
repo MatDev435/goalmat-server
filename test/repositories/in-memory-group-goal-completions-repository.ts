@@ -7,6 +7,20 @@ export class InMemoryGroupGoalCompletionsRepository
 {
   public items: GroupGoalCompletion[] = []
 
+  async findById(
+    groupGoalCompletionId: string
+  ): Promise<GroupGoalCompletion | null> {
+    const groupGoalCompletion = this.items.find(
+      item => item.id === groupGoalCompletionId
+    )
+
+    if (!groupGoalCompletion) {
+      return null
+    }
+
+    return groupGoalCompletion
+  }
+
   async fetchMemberGroupGoalCompletions(
     goalId: string,
     memberId: string
@@ -38,5 +52,13 @@ export class InMemoryGroupGoalCompletionsRepository
     this.items.push(newGroupGoalCompletion)
 
     return newGroupGoalCompletion
+  }
+
+  async delete(groupGoalCompletionId: string): Promise<void> {
+    const itemIndex = this.items.findIndex(
+      item => item.id === groupGoalCompletionId
+    )
+
+    this.items.splice(itemIndex, 1)
   }
 }

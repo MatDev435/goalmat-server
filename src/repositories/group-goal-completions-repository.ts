@@ -1,6 +1,7 @@
 import { GroupGoalCompletion, Prisma } from '@prisma/client'
 
 export interface GroupGoalCompletionsRepository {
+  findById(groupGoalCompletionId: string): Promise<GroupGoalCompletion | null>
   fetchMemberGroupGoalCompletions(
     goalId: string,
     memberId: string
@@ -8,4 +9,5 @@ export interface GroupGoalCompletionsRepository {
   create(
     groupGoalCompletion: Prisma.GroupGoalCompletionUncheckedCreateInput
   ): Promise<GroupGoalCompletion>
+  delete(groupGoalCompletionId: string): Promise<void>
 }
