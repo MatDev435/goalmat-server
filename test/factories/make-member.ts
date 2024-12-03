@@ -6,7 +6,7 @@ export function makeMember(override: Partial<Member> = {}) {
     id: randomUUID(),
     userId: randomUUID(),
     groupId: randomUUID(),
-    points: 0,
+    points: Math.round(Math.random() * 100 - 1),
     joinedAt: new Date(),
     ...override,
   } as Member

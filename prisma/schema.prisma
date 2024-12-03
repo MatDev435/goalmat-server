@@ -32,7 +32,7 @@ model User {
   joinedGroups  Member[]
   goals         Goal[]
   completions   GoalCompletion[]
-  weekSummaires WeekSummary[]
+  weekSummaries WeekSummary[]
   subscription  Subscription[]
   codes         UserCode[]
 

@@ -26,6 +26,14 @@ export class InMemoryMembersRepository implements MembersRepository {
     return member
   }
 
+  async fetchByPoints(groupId: string): Promise<Member[]> {
+    const members = this.items
+      .filter(item => item.groupId === groupId)
+      .sort((a, b) => b.points - a.points)
+
+    return members
+  }
+
   async isUserInAnyGroup(userId: string): Promise<boolean> {
     const memberIn = this.items.some(item => item.userId === userId)
 
