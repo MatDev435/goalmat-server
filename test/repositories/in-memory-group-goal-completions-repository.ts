@@ -39,6 +39,21 @@ export class InMemoryGroupGoalCompletionsRepository
     return completions
   }
 
+  async fetchGroupGoalCompletions(
+    groupId: string
+  ): Promise<GroupGoalCompletion[]> {
+    const startOfWeek = myDayjs().startOf('isoWeek').toDate()
+    const endOfWeek = myDayjs().endOf('isoWeek').toDate()
+
+    const groupGoalCompletions = this.items
+      .filter(item => item.groupId === groupId)
+      .filter(
+        item => item.completedAt >= startOfWeek && item.completedAt <= endOfWeek
+      )
+
+    return groupGoalCompletions
+  }
+
   async create(
     groupGoalCompletion: Prisma.GroupGoalCompletionUncheckedCreateInput
   ): Promise<GroupGoalCompletion> {

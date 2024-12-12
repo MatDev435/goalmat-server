@@ -19,9 +19,11 @@ export class InMemoryGoalsRepository implements GoalsRepository {
     const startOfWeek = myDayjs().startOf('isoWeek').toDate()
     const endOfWeek = myDayjs().endOf('isoWeek').toDate()
 
-    const goals = this.items.filter(
-      item => item.createdAt >= startOfWeek && item.createdAt <= endOfWeek
-    )
+    const goals = this.items
+      .filter(item => item.ownerId === userId)
+      .filter(
+        item => item.createdAt >= startOfWeek && item.createdAt <= endOfWeek
+      )
 
     return goals
   }
@@ -36,10 +38,25 @@ export class InMemoryGoalsRepository implements GoalsRepository {
       .subtract(1, 'week')
       .toDate()
 
-    const goals = this.items.filter(
-      item =>
-        item.createdAt >= startOfLastWeek && item.createdAt <= endOfLastWeek
-    )
+    const goals = this.items
+      .filter(item => item.ownerId === userId)
+      .filter(
+        item =>
+          item.createdAt >= startOfLastWeek && item.createdAt <= endOfLastWeek
+      )
+
+    return goals
+  }
+
+  async fetchGroupWeekGoals(groupId: string): Promise<Goal[]> {
+    const startOfWeek = myDayjs().startOf('isoWeek').toDate()
+    const endOfWeek = myDayjs().endOf('isoWeek').toDate()
+
+    const goals = this.items
+      .filter(item => item.groupId === groupId)
+      .filter(
+        item => item.createdAt >= startOfWeek && item.createdAt <= endOfWeek
+      )
 
     return goals
   }

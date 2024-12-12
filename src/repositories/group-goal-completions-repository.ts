@@ -1,4 +1,4 @@
-import { GroupGoalCompletion, Prisma } from '@prisma/client'
+import { Goal, GroupGoalCompletion, Prisma } from '@prisma/client'
 
 export interface GroupGoalCompletionsRepository {
   findById(groupGoalCompletionId: string): Promise<GroupGoalCompletion | null>
@@ -6,6 +6,7 @@ export interface GroupGoalCompletionsRepository {
     goalId: string,
     memberId: string
   ): Promise<GroupGoalCompletion[]>
+  fetchGroupGoalCompletions(groupId: string): Promise<GroupGoalCompletion[]>
   create(
     groupGoalCompletion: Prisma.GroupGoalCompletionUncheckedCreateInput
   ): Promise<GroupGoalCompletion>
